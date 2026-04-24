@@ -14,7 +14,11 @@ pub enum SectionCode {
 }
 
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+// The Default trait provides a way to create a default value for a type. 
+// For Function, it allows you to create an instance where locals and code 
+// are empty vectors (i.e., Function { locals: vec![], code: vec![] }). 
+// This is useful for initialization without specifying all fields manually.
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Function {
     pub locals: Vec<FunctionLocal>,
     pub code: Vec<Instruction>,
