@@ -229,6 +229,8 @@ mod tests {
     use crate::binary::types::{FunctionLocal, ValueType};
     use crate::binary::{instruction::Instruction, section::Function, types::FuncType};
     use anyhow::Result;
+    use crate::execution::runtime::Runtime;
+
 
     #[test]
     fn decode_simplest_module() -> Result<()> {
@@ -337,6 +339,24 @@ mod tests {
                 ..Default::default()
             }
         );
+        Ok(())
+    }
+
+    #[cfg(test)]
+
+    #[test]
+    fn execute_i32_add() -> Result<()> {
+        let wasm = wat::parse_file("src/fixtures/func_add.wat")?;
+        let mut runtime = Runtime::instantiate(wasm)?;
+        let tests = vec![(2, 3, 5), (10, 5, 15), (1, 1, 2)];
+
+        for (left, right, want) in tests {
+            use crate::execution::value::Value;
+
+            let args = vec![Value::I32(left), Value::I32(right)];
+            let result = runtime.call(0, args)?;
+            assert_eq!(result, Some(Value::I32(want)));
+       }
         Ok(())
     }
         
